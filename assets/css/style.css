@@ -1,0 +1,114 @@
+@font-face {
+  font-family: "'Gabriel Weiss' Friends Font";
+   src: url("../fonts/friends.ttf") format("truetype");
+}
+
+body{
+  text-align: center;
+  background: url("../images/Friends.jpg") no-repeat center fixed;
+  background-size: cover;
+  font-family: "'Gabriel Weiss' Friends Font";
+}
+.header{
+  background-color: rgb(246,239,230,.5);
+  border-radius: 15px;
+  margin: 30px auto 10px;
+  width: 633px;
+}
+.logo{
+  margin:20px auto;
+}
+.container{
+  background-color: rgb(246,239,230,.5);
+  border-radius: 15px;
+  margin: 5px auto 20px;
+  padding: 5px 0px;
+  width:980px;
+  height: auto;
+}
+.title{
+  font-size: 80px;
+  color: #00b3e8;
+  text-shadow: black -3px 3px;
+}
+.start{
+  margin: 10px auto 60px;
+  font-size: 40px;
+  color: black;
+  background-color: #00b3e8;
+  box-shadow: black -3px 3px;
+  border-radius: 15px;
+  width: 200px;
+  height: 60px;
+  text-align: center;
+}
+.start:hover{
+  cursor: pointer;
+  color: black;
+  background-color: #fabd0e;
+}
+.question{
+  font-size: 35px; 
+  color: #00b3e8;
+  text-shadow: black -2px 2px;
+}
+.option{
+  background-color: rgb(0,179,232, 0.8);
+  box-shadow: black -3px 3px;
+  font-size: 25px;
+  margin: 5px auto;
+  text-align: left;
+  width: fit-content;
+  height:35px;
+  padding: 5px;
+  border-radius: 10px;
+}
+.option:hover{
+  cursor: pointer;
+  background-color: #fabd0e;
+}
+.message{
+  font-size: 40px;
+  color: #00b3e8;
+  text-shadow: black -3px 3px;
+}
+.gif{
+  max-height: 200px;
+  border-radius: 25px;
+  margin: 0px auto;
+}
+.rightAnswer{
+  font-size: 40px;
+  color: #00b3e8;
+  text-shadow: black -3px 3px;
+}
+.time{
+  margin: 20px auto;
+  text-align: center;
+  display: inline-block;
+  font-size: 30px;
+  background-color: #fabd0e;
+  color:black ;
+  border: solid #fabd0e 2px;
+  border-radius: 15px;
+  width: 250px;
+  height:45px;
+  box-shadow: black -3px 3px;  
+}
+.restart{
+  margin:auto;
+  font-size: 30px;
+  color: black;
+  background-color: #ea181e;
+  width: 200px;
+  height: 100px;
+  text-align: center;
+  border-radius: 15px;
+  text-shadow: #ea181e 1px 1px;
+}
+.restart:hover{
+  color: #ea181e;
+  background-color: black;
+   text-shadow: black 1px 1px;
+  cursor: pointer;
+}
