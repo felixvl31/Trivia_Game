@@ -95,6 +95,18 @@ body{
   height:45px;
   box-shadow: black -3px 3px;  
 }
+
+.finalResults {
+  font-size: 30px;
+  color: #00b3e8;
+  text-shadow: black -2px 2px;
+}
+
+.TotalQuestions,.FinalRight,.FinalWrong,.FinalUnaswered{
+font-size: 30px;
+  color: #ea181e;
+  text-shadow: black -2px 2px;
+}
 .restart{
   margin:auto;
   font-size: 30px;
