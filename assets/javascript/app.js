@@ -3,12 +3,12 @@ var trivia = {
 	wrong : 0,
 	unanswered : 0,
 	time : 15,
-	current : 1,
+	current : 0,
 	gameRestarted: false,
 	intervalId: setInterval(count, 1000),
 
 	//Number of questions
-	questionsNumber:[1,2,3,4,5,6,7,8,9,10,11,12],
+	questionsNumber:[0,1,2,3,4,5,6,7,8,9,10,11],
 	// Declare questions in an array
 	questionsArray : [
   "Where did Ross and Rachel get married on a whim?",
@@ -42,18 +42,18 @@ var trivia = {
 	],
 	// Declare the right answers 
 	Answers : {
+  0: "1",
   1: "2",
-  2: "3",
+  2: "1",
   3: "2",
-  4: "1",
+  4: "2",
   5: "3",
-  6: "4",
-  7: "1",
-  8: "4",
-	9: "3",
-	10:"2",
-	11:"2",
-	12:"4"
+  6: "0",
+  7: "3",
+	8: "2",
+	9: "1",
+	10:"1",
+	11:"3"
 	},
 //Pick Random Question
 	randomQuestion: function(){
@@ -67,18 +67,29 @@ var trivia = {
 function count() {
 	trivia.time--;
 	$(".remainingTime").text(trivia.time);
+	//Check if time gets to 0
 	if (trivia.time === 0) {
-		timeOut();
-		clearInterval(trivia.intervalId);
-	}
-}
+		$(".option").off("click");
+		var rightAnswer = trivia.optionsArray[trivia.current - 1][trivia.Answers[trivia.current]];
+		if (trivia.questionsNumber.length>=4) {
+			trivia.time = 15;
+			clearInterval(trivia.intervalId);
 
-//Change question & options
-function fillContent(number) {
-	$(".question").text(trivia.questionsArray[number - 1]);
-	$(".options").css("display", "inherit");
-	for (i=1;i<=4;i++){
-		$("#"+i).text(trivia.optionsArray[number - 1][i-1]);
+			//Update Display	
+			$(".content").css("display", "none");
+			$(".results").css("display", "inherit");
+			$(".gif").css("display", "inherit");
+
+			$(".message").html("Time Out!");
+			$(".gif").attr("src", "assets/images/" + trivia.current + "wrong.gif");
+			if (trivia.gameRestarted){
+				$(".rightAnswer").html( "The right answer was: " + rightAnswer );
+			}
+			trivia.randomQuestion();
+			trivia.unanswered++;
+			setTimeout(play,3000);
+		}
+		clearInterval(trivia.intervalId);
 	}
 }
 
@@ -93,104 +104,73 @@ function play() {
 		$(".time").css("display", "block");
 		$(".results").css("display", "none");
 		//Update questions & options
-		fillContent(trivia.current);
+			$(".question").text(trivia.questionsArray[trivia.current]);
+		$(".options").css("display", "inherit");
+		for (i=0;i<=3;i++){
+			$("#"+i).html(trivia.optionsArray[trivia.current][i]);
+		}
 
 	//Check click on options
 		$(".option").on("click", function(event) {
 			clearInterval(trivia.intervalId);
 			trivia.time = 15;
-			checkAnswer(event);
+			
+			//Check the answer
+			var solution = event.currentTarget.id;
+			var correctGif = "wrong";
+			//Update Display	
+			$(".content").css("display", "none");
+			$(".results").css("display", "inherit");
+			$(".gif").css("display", "inherit");
+
+			var rightAnswer = trivia.optionsArray[trivia.current][trivia.Answers[trivia.current]];
+			if (trivia.questionsNumber.length>=4) {
+				if (solution == trivia.Answers[trivia.current]) {
+					trivia.right++;
+					correctGif = "";
+					$(".message").html(rightAnswer +", right!");
+					$(".rightAnswer").empty();
+				} 
+				else {
+					trivia.wrong++;
+					$(".message").html(trivia.optionsArray[trivia.current][event.currentTarget.id] +", wrong!");
+					correctGif = "wrong";
+					if (trivia.gameRestarted){
+						$(".rightAnswer").html("The right answer was: " + rightAnswer);
+					}
+				}
+				$(".gif").attr("src", "assets/images/" + trivia.current + correctGif+".gif");
+				setTimeout(play,3000);
+			}
+			//Get new question number
 			trivia.randomQuestion();
 			$(".option").off("click");
 		});
 	} 
 	else {
-		gameCompleted();
-	}
-}
-
-//Check if the answer is the correct one
-function checkAnswer(event) {
-	//Save answer
-	var solution = event.currentTarget.id;
-	var correctGif = "wrong";
-	//Update Display	
-	$(".content").css("display", "none");
-	$(".results").css("display", "inherit");
-	$(".gif").css("display", "inherit");
-
-
-	var rightAnswer = trivia.optionsArray[trivia.current - 1][trivia.Answers[trivia.current] - 1];
-	if (trivia.questionsNumber.length>=4) {
-		if (solution == trivia.Answers[trivia.current]) {
-			trivia.right++;
-			correctGif = "";
-			$(".message").html(rightAnswer +", right!");
-			$(".rightAnswer").empty();
-		} 
-		else {
-			trivia.wrong++;
-			$(".message").html(trivia.optionsArray[trivia.current - 1][event.target.attributes.value.nodeValue] +", wrong!");
-			correctGif = "wrong";
-			if (trivia.gameRestarted){
-				$(".rightAnswer").html("The right answer was: " + rightAnswer);
-			}
-		}
-		$(".gif").attr("src", "assets/images/" + trivia.current + correctGif+".gif");
-		setTimeout(play,3000);
-	}
-}
-
-// Question is not answered
-function timeOut() {
-	$(".option").off("click");
-	var rightAnswer = trivia.optionsArray[trivia.current - 1][trivia.Answers[trivia.current] - 1];
-	if (trivia.questionsNumber.length>=4) {
-		trivia.time = 15;
 		clearInterval(trivia.intervalId);
-
-		//Update Display	
-		$(".content").css("display", "none");
-		$(".results").css("display", "inherit");
-		$(".gif").css("display", "inherit");
-
-		$(".message").html("Time Out!");
-		$(".gif").attr("src", "assets/images/" + trivia.current + "wrong.gif");
-		if (trivia.gameRestarted){
-			$(".rightAnswer").html( "The right answer was: " + rightAnswer );
-		}
-		trivia.randomQuestion();
-		trivia.unanswered++;
-		setTimeout(play,3000);
+		$(".time").css("display", "none");
+		$(".message").html("THANKS FOR PLAYING!");
+		$(".gif").css("display", "none");
+		$(".finalResults").css("display", "unset");
+		$(".FinalRight").text(trivia.right);
+		$(".FinalWrong").text(trivia.wrong);
+		$(".FinalUnaswered").text(trivia.unanswered);
+		$(".Final Right").text(trivia.right);
+		$(".restart").on("click", function() {
+			trivia.gameRestarted = true;
+			restart();
+		});
 	}
-}
-
-//Display results of the game and Restart Button
-function gameCompleted() {
-	clearInterval(trivia.intervalId);
-	$(".time").css("display", "none");
-	$(".message").html("THANKS FOR PLAYING!");
-	$(".gif").css("display", "none");
-	$(".finalResults").css("display", "unset");
-	$(".FinalRight").text(trivia.right);
-	$(".FinalWrong").text(trivia.wrong);
-	$(".FinalUnaswered").text(trivia.unanswered);
-	$(".Final Right").text(trivia.right);
-	$(".restart").on("click", function() {
-		trivia.gameRestarted = true;
-		restart();
-	});
 }
 
 //Restart function
 function restart() {
 	clearInterval(trivia.intervalId);
 	$(".option").off("click");
-	trivia.right = 0;
-	trivia.wrong=0;
-	trivia.unanswered=0;
+	trivia.right = trivia.wrong = trivia.unanswered=0;
 	trivia.time = 15;
-	trivia.questionsNumber =[1,2,3,4,5,6,7,8,9,10,11,12];
+	trivia.questionsNumber =[0,1,2,3,4,5,6,7,8,9,10,11];
 	trivia.randomQuestion();
 
 	//Update Display	
@@ -205,7 +185,5 @@ function restart() {
 	});
 }
 
-window.onload = function() {
 	// Start Game
-		restart();
-};
+	restart();
