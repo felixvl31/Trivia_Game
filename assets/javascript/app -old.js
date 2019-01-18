@@ -1,5 +1,3 @@
-
-var second; 
 var trivia = {
 	right : 0,
 	wrong : 0,
@@ -7,6 +5,7 @@ var trivia = {
 	time : 15,
 	current : 0,
 	gameRestarted: false,
+
 	//Number of questions
 	questionsNumber:[0,1,2,3,4,5,6,7,8,9,10,11],
 	// Declare questions in an array
@@ -46,20 +45,21 @@ var trivia = {
    	this.current = this.questionsNumber[index];
     this.questionsNumber.splice(index,1);
 	},
-	desireQuestions : 8,
+	desireQuestions : 9,
 }
  window.onload = function() {
-	
-	//Timer function, decrease 1 from time & update display
-	function timer() {
+	//count function, decrease 1 from time & update display
+	function count() {
 		trivia.time--;
+		console.log(trivia.time);
 		$(".remainingTime").text(trivia.time);
-		//Check if time gets to 0, count it as unanswered question
+		//Check if time gets to 0
 		if (trivia.time === 0) {
 			$(".option").off("click");
 			var rightAnswer = trivia.optionsArray[trivia.current][trivia.optionsArray[trivia.current][4]];
-			if (trivia.questionsNumber.length>=(trivia.questionsArray.length-trivia.desireQuestions)) {
+			if (trivia.questionsNumber.length>=trivia.desireQuestions) {
 				trivia.time = 15;
+				clearInterval(trivia.intervalId);
 
 				//Update Display	
 				$(".content").css("display", "none");
@@ -71,23 +71,20 @@ var trivia = {
 				if (trivia.gameRestarted){
 					$(".rightAnswer").html( "The right answer was: " + rightAnswer );
 				}
-				//Increase unsanswered questions, get new question number and display the results for 3 seconds
 				trivia.randomQuestion();
 				trivia.unanswered++;
 				setTimeout(play,3000);
 			}
-			clearInterval(second);
+			clearInterval(trivia.intervalId);
 		}
 	}
 
-	//Update and decrease timer, Fill questions & options in case still needed (If not go to gameCompleted function)
+	
+	//Update and decrease count, Fill questions & options in case still needed (If not go to gameCompleted function)
 	function play() {
 		$(".remainingTime").text(trivia.time);
-		clearInterval(second);
-		second = setInterval(timer, 1000);
-		console.log(second);
-		//Check if the number of questions displayed is not greater than the desire
-		if (trivia.questionsNumber.length>=(trivia.questionsArray.length-trivia.desireQuestions)) {
+		trivia.intervalId = setInterval(count, 1000);
+		if (trivia.questionsNumber.length>=trivia.desireQuestions) {
 			//Update Display	
 			$(".initial").css("display", "none");
 			$(".content").css("display", "block");
@@ -102,8 +99,7 @@ var trivia = {
 
 		//Check click on options
 			$(".option").on("click", function(event) {
-				$(".option").off("click");
-				clearInterval(second);
+				clearInterval(trivia.intervalId);
 				trivia.time = 15;
 				
 				//Check the answer
@@ -115,15 +111,13 @@ var trivia = {
 				$(".gif").css("display", "inherit");
 
 				var rightAnswer = trivia.optionsArray[trivia.current][trivia.optionsArray[trivia.current][4]];
-				if (trivia.questionsNumber.length>=(trivia.questionsArray.length-trivia.desireQuestions)) {
-					// Answer is correct
+				if (trivia.questionsNumber.length>=trivia.desireQuestions) {
 					if (solution == trivia.optionsArray[trivia.current][4]) {
 						trivia.right++;
 						correctGif = "";
 						$(".message").html(rightAnswer +", right!");
 						$(".rightAnswer").empty();
 					} 
-					//Answer is wrong
 					else {
 						trivia.wrong++;
 						$(".message").html(trivia.optionsArray[trivia.current][event.currentTarget.id] +", wrong!");
@@ -132,23 +126,21 @@ var trivia = {
 							$(".rightAnswer").html("The right answer was: " + rightAnswer);
 						}
 					}
-					//Update gif and wait 3 seconds
 					$(".gif").attr("src", "assets/images/" + trivia.current + correctGif+".gif");
 					setTimeout(play,3000);
 				}
 				//Get new question number
 				trivia.randomQuestion();
+				$(".option").off("click");
 			});
 		} 
-		//If the desire questions have been displayed, finish game
 		else {
-			clearInterval(second);
+			clearInterval(trivia.intervalId);
 			console.log(trivia.intervalId);
 			$(".time").css("display", "none");
 			$(".message").html("THANKS FOR PLAYING!");
 			$(".gif").css("display", "none");
 			$(".finalResults").css("display", "unset");
-			$(".TotalQuestions").text(trivia.desireQuestions);
 			$(".FinalRight").text(trivia.right);
 			$(".FinalWrong").text(trivia.wrong);
 			$(".FinalUnaswered").text(trivia.unanswered);
@@ -162,11 +154,9 @@ var trivia = {
 
 	//Restart function
 	function restart() {
-		// clearInterval(second);
-		$(".restart").off("click");
-		trivia.right = 0;
-		trivia.wrong = 0;
-		trivia.unanswered=0;
+		clearInterval(trivia.intervalId);
+		$(".option").off("click");
+		trivia.right = trivia.wrong = trivia.unanswered=0;
 		trivia.time = 15;
 		trivia.questionsNumber =[0,1,2,3,4,5,6,7,8,9,10,11];
 		trivia.randomQuestion();
