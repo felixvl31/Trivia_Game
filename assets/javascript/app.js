@@ -1,11 +1,11 @@
 
-var second; 
 var trivia = {
 	right : 0,
 	wrong : 0,
 	unanswered : 0,
 	time : 15,
 	current : 0,
+	second:0 ,
 	gameRestarted: false,
 	//Number of questions
 	questionsNumber:[0,1,2,3,4,5,6,7,8,9,10,11],
@@ -76,16 +76,15 @@ var trivia = {
 				trivia.unanswered++;
 				setTimeout(play,3000);
 			}
-			clearInterval(second);
+			clearInterval(trivia.second);
 		}
 	}
 
 	//Update and decrease timer, Fill questions & options in case still needed (If not go to gameCompleted function)
 	function play() {
 		$(".remainingTime").text(trivia.time);
-		clearInterval(second);
-		second = setInterval(timer, 1000);
-		console.log(second);
+		clearInterval(trivia.second);
+		trivia.second = setInterval(timer, 1000);
 		//Check if the number of questions displayed is not greater than the desire
 		if (trivia.questionsNumber.length>=(trivia.questionsArray.length-trivia.desireQuestions)) {
 			//Update Display	
@@ -103,7 +102,7 @@ var trivia = {
 		//Check click on options
 			$(".option").on("click", function(event) {
 				$(".option").off("click");
-				clearInterval(second);
+				clearInterval(trivia.second);
 				trivia.time = 15;
 				
 				//Check the answer
@@ -142,8 +141,7 @@ var trivia = {
 		} 
 		//If the desire questions have been displayed, finish game
 		else {
-			clearInterval(second);
-			console.log(trivia.intervalId);
+			clearInterval(trivia.second);
 			$(".time").css("display", "none");
 			$(".message").html("THANKS FOR PLAYING!");
 			$(".gif").css("display", "none");
@@ -162,7 +160,7 @@ var trivia = {
 
 	//Restart function
 	function restart() {
-		// clearInterval(second);
+		// clearInterval(trivia.second);
 		$(".restart").off("click");
 		trivia.right = 0;
 		trivia.wrong = 0;
