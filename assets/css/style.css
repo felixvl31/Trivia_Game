@@ -144,9 +144,10 @@ font-size: 30px;
   }
   .option{
     margin-top: 20px;
-    margin-bottom:20px
+    margin-bottom:20px;
+    font-size: 20px;
   }
   .gif{
-    max-height: 150px;
+    max-width: 80%;
   }
 }
