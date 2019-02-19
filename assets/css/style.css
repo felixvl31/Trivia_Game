@@ -133,7 +133,9 @@ font-size: 30px;
    width: 100%;
    margin:0 auto;
   }
-
+  .container{
+    width:95%;
+  }
 }
 @media only screen and (max-width: 640px) {
   body {
@@ -141,7 +143,10 @@ font-size: 30px;
     width:100%;
   }
   .option{
-    margin-top: 40px;
-    margin-bottom:40px
+    margin-top: 20px;
+    margin-bottom:20px
+  }
+  .gif{
+    max-height: 150px;
   }
 }
